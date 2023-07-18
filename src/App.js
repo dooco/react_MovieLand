@@ -1,5 +1,5 @@
 import React from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import './App.css';
 import SearchIcon from './search.svg';
 import MovieCard from "./MovieCard";
@@ -7,14 +7,15 @@ import MovieCard from "./MovieCard";
 const API_URL = 'https://www.omdbapi.com/?apikey=afec026d';
 
 // const API_URL = 'http://www.omdbapi.com?apikey=afec026d';
-const movie1 =
+const movie =
     { Title: 'Italian Spiderman', Year: '2007', imdbID: 'tt2705436', Type: 'movie' }
 
 const App = () => {
+    const [movies, setMovies] = useState([]);
     const searchMovies = async (title) => {
         const response = await fetch(`${API_URL}&s=${title}`);
         const data = await response.json();
-        console.log(data.Search);
+        setMovies(data.Search);
     }
     useEffect(() => {
         searchMovies('Spiderman');
@@ -34,9 +35,22 @@ const App = () => {
                     onClick={() => { }}
                 />
             </div>
-            <div className="container">
-                <MovieCard movie1={movie1} />
-            </div>
+            {
+                movies?.length > 0
+                    ? (
+                        <div className="container">
+                            {movies.map((movie) => (<MovieCard movie={movie} />))}
+                        </div>
+                    ) : (
+                        <div className="empty">
+                            <h2>
+                                No Movies Found
+                            </h2>
+                        </div>
+
+                    )
+            }
+
 
         </div>
 
